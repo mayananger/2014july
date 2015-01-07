@@ -1,9 +1,6 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -11,8 +8,8 @@ import java.util.ArrayList;
  * Created by eladlavi on 12/22/14.
  */
 public class ClientThread extends Thread {
-    public static final int SEND = 1;
-    public static final int CHECK_MESSAGES = 2;
+    public static final byte SEND = 1;
+    public static final byte CHECK_MESSAGES = 2;
     Socket client;
 
     public ClientThread(Socket client){
@@ -21,9 +18,12 @@ public class ClientThread extends Thread {
 
     @Override
     public void run() {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
         try {
-            InputStream inputStream = client.getInputStream();
-            OutputStream outputStream = client.getOutputStream();
+            inputStream = client.getInputStream();
+            outputStream = client.getOutputStream();
+            client.setSoTimeout(5000);
 
             byte[] bytes = new byte[1024];
             int actuallyRead;
@@ -42,11 +42,25 @@ public class ClientThread extends Thread {
                 outputStream.write(response);
             }
 
-            outputStream.close();
-            inputStream.close();
+
 
         }catch(Exception ex){
             System.out.println("error: " + ex);
+        }finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

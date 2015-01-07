@@ -106,11 +106,12 @@ public class MainActivity extends ActionBarActivity {
                     outputStream = socket.getOutputStream();
                     inputStream = socket.getInputStream();
                     String message = "what's up dog?";
-                    byte[] messageBytes = new byte[message.length() + 3];
+                    byte[] temp = message.getBytes();
+                    byte[] messageBytes = new byte[temp.length + 3];
                     messageBytes[0] = 1;
                     messageBytes[1] = 102;
                     messageBytes[2] = -28;
-                    byte[] temp = message.getBytes();
+
                     for (int i = 3; i < messageBytes.length; i++) {
                         messageBytes[i] = temp[i - 3];
                     }
