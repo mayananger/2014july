@@ -1,17 +1,24 @@
 package com.example.locationlogging;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    MyService myService;
+    boolean bound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +62,26 @@ public class MainActivity extends ActionBarActivity {
         */
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, MyService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("Elad", "in onStop");
+        if(bound){
+            unbindService(connection);
+            bound = false;
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("Elad", "in onDestroy");
     }
 
     @Override
@@ -96,7 +112,33 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void btnStop(View view) {
+        if(bound){
+            unbindService(connection);
+            bound = false;
+        }
         Intent intent = new Intent(this, MyService.class);
         stopService(intent);
+    }
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MyService.LocalBinder binder = (MyService.LocalBinder)service;
+            myService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            bound = false;
+        }
+    };
+
+    public void btnShowX(View view) {
+        if(bound){
+            int x = myService.getX();
+            Toast.makeText(this, "value of x: " + x, Toast.LENGTH_LONG).show();
+
+        }
     }
 }
