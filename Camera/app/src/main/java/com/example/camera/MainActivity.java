@@ -1,12 +1,22 @@
 package com.example.camera;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import java.io.File;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    public static final int TAKE_PICTURE = 1;
+    Uri outputFileUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,5 +45,15 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void btnTakePhone(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File file = new File(Environment.getExternalStorageDirectory(),
+                "MyPhoto.jpg");
+        outputFileUri = Uri.fromFile(file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+        startActivityForResult(intent, TAKE_PICTURE);
+
     }
 }
