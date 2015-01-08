@@ -1,11 +1,13 @@
 package com.example.locationlogging;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -35,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
         c.close();
         db.close();
         */
+        /*
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         t.start();
+        */
     }
 
 
@@ -84,5 +88,15 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void btnStart(View view) {
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
+    }
+
+    public void btnStop(View view) {
+        Intent intent = new Intent(this, MyService.class);
+        stopService(intent);
     }
 }
