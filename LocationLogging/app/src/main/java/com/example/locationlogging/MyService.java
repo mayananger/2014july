@@ -3,6 +3,7 @@ package com.example.locationlogging;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,6 +21,7 @@ public class MyService extends Service {
 
     LocationManager locationManager;
     LocationListener locationListener;
+    DBAdapter db;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,6 +49,8 @@ public class MyService extends Service {
             locationListener = new MyLocationListener();
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     1000, 0, locationListener);
+            db = new DBAdapter(this);
+            db.open();
         }
 
         return START_STICKY;
@@ -58,15 +62,16 @@ public class MyService extends Service {
         //Toast.makeText(this,"Service Destroyed", Toast.LENGTH_LONG).show();
         Log.d("Elad", "Service Stop");
         locationManager.removeUpdates(locationListener);
+        db.close();
     }
 
     private class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
-                String loc = "Location changed: Lat: " + location.getLatitude() +
-                        " Lng: " + location.getLongitude();
-                Log.d("Elad", loc);
+
+                db.insertLocation(location.getTime(),
+                        location.getLatitude(), location.getLongitude());
             }
         }
         @Override

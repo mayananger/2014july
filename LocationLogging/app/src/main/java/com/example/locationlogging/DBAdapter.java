@@ -56,7 +56,7 @@ public class DBAdapter {
     }
 
     //this method will add a new record to the Locations table.
-    public long insertLocation(long sampleTime, float lat, float lng){
+    public long insertLocation(long sampleTime, double lat, double lng){
         ContentValues values = new ContentValues();
         values.put(KEY_DATE, sampleTime);
         values.put(KEY_LAT, lat);
