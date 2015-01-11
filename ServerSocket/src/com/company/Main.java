@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         messages = new ArrayList<Message>();
         try {
-            ServerSocket serverSocket = new ServerSocket(10000);
+            ServerSocket serverSocket = new ServerSocket(20000);
             while(true){
                 System.out.println("waiting for incoming communication...");
                 Socket client = serverSocket.accept();

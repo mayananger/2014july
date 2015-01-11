@@ -23,11 +23,15 @@ public class ClientThread extends Thread {
         try {
             inputStream = client.getInputStream();
             outputStream = client.getOutputStream();
-            client.setSoTimeout(5000);
+            //client.setSoTimeout(5000);
 
             byte[] bytes = new byte[1024];
             int actuallyRead;
-
+            while ((actuallyRead = inputStream.read(bytes)) != -1){
+                System.out.println(bytes[0]);
+            }
+            System.out.println("conversation is done.");
+            /*
             while ((actuallyRead = inputStream.read(bytes)) != -1) {
                 byte action = bytes[0];
                 byte[] response = null;
@@ -41,7 +45,7 @@ public class ClientThread extends Thread {
                 }
                 outputStream.write(response);
             }
-
+            */
 
 
         }catch(Exception ex){
